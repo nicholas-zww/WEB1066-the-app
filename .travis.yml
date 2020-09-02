@@ -4,6 +4,7 @@ jdk:
   - openjdk9
 
 env:
+  matrix
   - COVERAGE=0.5 TARGET=ui
   - COVERAGE=0.5 TARGET=service/cart
   - COVERAGE=0.5 TARGET=service/user
@@ -20,8 +21,13 @@ script:
   - echo "testing coming soon"
   - COVERAGE=$COVERAGE ./gradlew -p ./monolithic/$TARGET check
 
-deploy:
-  - provider: script
-    script: echo "WIP"
-    on:
-      all_branches: true
+jobs:
+  include:
+    stage: deploy
+    before_deploy:
+      - ./gradlew -p ./monolithic/ui packageToContainer
+    deploy:
+      - provider: script
+        script: ./script/deploy.sh
+        on:
+          branch: master
