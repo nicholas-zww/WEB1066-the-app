@@ -6,5 +6,6 @@ intall:
 
 script:
   - echo "testing coming soon"
+  - ./gradlew test
 
 
